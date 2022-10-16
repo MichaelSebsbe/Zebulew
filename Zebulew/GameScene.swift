@@ -20,6 +20,8 @@ class GameScene: SKScene {
     var knobRadius: CGFloat = 50.0
     let playerScale = 0.331
     
+    var knobIsReturning = false
+    
     var knobsOGPositon: CGPoint = CGPoint(x: 0, y: 0)
     
     //Sprite Engine
@@ -62,6 +64,7 @@ extension GameScene{
               let joystickKnob = joystickKnob else {return}
         // if joystick not touched, return
         if !joystickAction {return}
+        knobIsReturning = false
         
         for touch in touches{
             print("touch")
@@ -92,6 +95,7 @@ extension GameScene{
 // MARK: Helper functions
 extension GameScene{
     fileprivate func returnJoysickKnobToCenter() {
+        knobIsReturning = true
         let moveBackAction = SKAction.move(to: knobsOGPositon, duration: 0.1)
         moveBackAction.timingMode = .linear
         joystickKnob?.run(moveBackAction)
@@ -108,7 +112,8 @@ extension GameScene{
         previousTimeInterval = currentTime
         print(deltaTime)
         // Player Movement
-        guard let joystickKnob = joystickKnob else {return}
+        guard let joystickKnob = joystickKnob,
+                !knobIsReturning else {return}
         
         //get position fo joystic
         let xPosition = Double(joystickKnob.position.x)
@@ -124,7 +129,8 @@ extension GameScene{
         let faceMovement = SKAction.rotate(toAngle: angle, duration: 0.0)
         
         let movementAndFaceAction = SKAction.sequence([move, faceMovement])
-
+        
+        
         player?.run(movementAndFaceAction)
         
     }
