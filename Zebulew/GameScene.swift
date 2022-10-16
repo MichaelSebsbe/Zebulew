@@ -113,27 +113,19 @@ extension GameScene{
         //get position fo joystic
         let xPosition = Double(joystickKnob.position.x)
         let yPostion = Double(joystickKnob.position.y)
+        
+        let angle = atan2(yPostion, xPosition)
         //create a displacement by multiplying joystick postion by Delta
         let displacment = CGVector(dx: xPosition * deltaTime, dy: yPostion * deltaTime)
-        let move = SKAction.move(by: displacment, duration: 0)
-        let faceAction: SKAction!
-        
-        let movingRight = 0 < xPosition
-        let movingLeft = xPosition < 0
-        
-        if movingLeft && playerIsFacingRight {
-            playerIsFacingRight = false
-            let faceMovement = SKAction.scaleX(to: playerScale * -1, duration: 0.0)
 
-            faceAction = SKAction.sequence([move , faceMovement])
-        } else if movingRight && !playerIsFacingRight {
-            playerIsFacingRight = true
-            let faceMovement = SKAction.scaleX(to: playerScale, duration: 0.0)
-            faceAction = SKAction.sequence([move , faceMovement])
-        } else {
-            faceAction = move
-        }
-        player?.run(faceAction)
+       
+        
+        let move = SKAction.move(by: displacment, duration: 0)
+        let faceMovement = SKAction.rotate(toAngle: angle, duration: 0.0)
+        
+        let movementAndFaceAction = SKAction.sequence([move, faceMovement])
+
+        player?.run(movementAndFaceAction)
         
     }
 }
