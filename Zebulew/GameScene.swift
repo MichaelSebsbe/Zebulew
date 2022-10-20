@@ -10,9 +10,14 @@ import GameplayKit
 
 class GameScene: SKScene {
     //Nodes
-    var player: SKNode?
+    var player: SKSpriteNode?
+    var playerShadow: SKNode?
     var joystick: SKNode?
     var joystickKnob: SKNode?
+    var aButton: SKNode?
+    
+    var wall: SKNode?
+    var uzi: SKNode?
     
     var joystickAction = false
     
@@ -29,17 +34,34 @@ class GameScene: SKScene {
     var playerIsFacingRight = true
     let playerSpeed = 4.0
     
+    
+    //sound
+    var gunPickUpSound = SKAction.playSoundFileNamed("gun_pick_up.mp3", waitForCompletion: false)
+    
+    //player textures
+    let playerEmptyHandsTexture = SKTexture(imageNamed: "player_empty_hands")
+    let playerPistolTexture = SKTexture(imageNamed: "player_pistol")
+    
+    //when the scene is presented by a view
     override func didMove(to view: SKView) {
-        player = childNode(withName: "player")
+        
+        player = childNode(withName: "player") as? SKSpriteNode
+        playerShadow = player?.childNode(withName: "shadow")
+        playerShadow?.alpha = 0.7
+        
+        wall = childNode(withName: "wall")
+        uzi = childNode(withName: "uzi")
+    
         joystick = childNode(withName: "joystick")
         joystickKnob = joystick?.childNode(withName: "knob")
         
+        aButton = childNode(withName: "aButton")
+        
+        // storing the center of joystick to use for returning when let go
         if let joystickKnob = joystickKnob{
             knobsOGPositon = joystickKnob.position
         }
     }
-    
-    
     
 }
 
@@ -56,6 +78,7 @@ extension GameScene{
                 // if the location of touch was in the frame of our knob, set joystick action to true
                 joystickAction = joystickKnob.frame.contains(location)
             }
+            
         }
     }
     
@@ -101,17 +124,8 @@ extension GameScene{
         joystickKnob?.run(moveBackAction)
         joystickAction = false
     }
-}
-
-// MARK: GameLoop
-
-extension GameScene{
-    // main event loop of game
-    override func update(_ currentTime: TimeInterval) {
-        let deltaTime = currentTime - previousTimeInterval
-        previousTimeInterval = currentTime
-        print(deltaTime)
-        // Player Movement
+    
+    private func startPlayerMovement(_ deltaTime: TimeInterval){
         guard let joystickKnob = joystickKnob,
                 !knobIsReturning else {return}
         
@@ -122,16 +136,42 @@ extension GameScene{
         let angle = atan2(yPostion, xPosition)
         //create a displacement by multiplying joystick postion by Delta
         let displacment = CGVector(dx: xPosition * deltaTime, dy: yPostion * deltaTime)
-
-       
         
         let move = SKAction.move(by: displacment, duration: 0)
         let faceMovement = SKAction.rotate(toAngle: angle, duration: 0.0)
         
         let movementAndFaceAction = SKAction.sequence([move, faceMovement])
         
-        
         player?.run(movementAndFaceAction)
+    }
+}
+
+// MARK: GameLoop
+
+extension GameScene{
+    // main event loop of game
+    override func update(_ currentTime: TimeInterval) {
+        let deltaTime = currentTime - previousTimeInterval
+        previousTimeInterval = currentTime
+        
+        let gunSpin = SKAction.rotate(byAngle: 0.02, duration: 0)
+        
+        uzi?.run(gunSpin)
+        
+        // Player Movement
+        startPlayerMovement(deltaTime)
+        
+
+        if let uzi = uzi{
+            if CGRectIntersectsRect(player!.frame, uzi.frame){
+                run(gunPickUpSound)
+                uzi.isHidden = true
+                player!.texture = playerPistolTexture
+                
+                //set to nil so sound doesnt play again
+                self.uzi = nil
+            }
+        }
         
     }
 }

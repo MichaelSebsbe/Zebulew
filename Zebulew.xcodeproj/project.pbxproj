@@ -15,6 +15,7 @@
 		AD6133BF28FC535B00B14679 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD6133BD28FC535B00B14679 /* Main.storyboard */; };
 		AD6133C128FC535C00B14679 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD6133C028FC535C00B14679 /* Assets.xcassets */; };
 		AD6133C428FC535C00B14679 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD6133C228FC535C00B14679 /* LaunchScreen.storyboard */; };
+		AD6133CB2900B15E00B14679 /* gun_pick_up.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133CA2900B15E00B14679 /* gun_pick_up.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		AD6133BE28FC535B00B14679 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AD6133C028FC535C00B14679 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD6133C328FC535C00B14679 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AD6133CA2900B15E00B14679 /* gun_pick_up.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gun_pick_up.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				AD6133BD28FC535B00B14679 /* Main.storyboard */,
 				AD6133C028FC535C00B14679 /* Assets.xcassets */,
 				AD6133C228FC535C00B14679 /* LaunchScreen.storyboard */,
+				AD6133CA2900B15E00B14679 /* gun_pick_up.mp3 */,
 			);
 			path = Zebulew;
 			sourceTree = "<group>";
@@ -130,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD6133BF28FC535B00B14679 /* Main.storyboard in Resources */,
+				AD6133CB2900B15E00B14679 /* gun_pick_up.mp3 in Resources */,
 				AD6133B628FC535B00B14679 /* GameScene.sks in Resources */,
 				AD6133C128FC535C00B14679 /* Assets.xcassets in Resources */,
 				AD6133C428FC535C00B14679 /* LaunchScreen.storyboard in Resources */,
