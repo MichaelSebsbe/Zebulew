@@ -20,7 +20,7 @@
 		AD6133D229020C6A00B14679 /* uzi_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133D129020C6A00B14679 /* uzi_sound.mp3 */; };
 		AD6133D42902103F00B14679 /* slash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133D32902103F00B14679 /* slash.mp3 */; };
 		AD6133D62902122900B14679 /* gun_reload.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133D52902122900B14679 /* gun_reload.mp3 */; };
-		AD6133DA29021B9400B14679 /* jump_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133D929021B9400B14679 /* jump_sound.mp3 */; };
+		AD6133DD2908992100B14679 /* jump_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD6133DC2908992100B14679 /* jump_sound.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +38,7 @@
 		AD6133D129020C6A00B14679 /* uzi_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = uzi_sound.mp3; sourceTree = "<group>"; };
 		AD6133D32902103F00B14679 /* slash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = slash.mp3; sourceTree = "<group>"; };
 		AD6133D52902122900B14679 /* gun_reload.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gun_reload.mp3; sourceTree = "<group>"; };
-		AD6133D929021B9400B14679 /* jump_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jump_sound.mp3; sourceTree = "<group>"; };
+		AD6133DC2908992100B14679 /* jump_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jump_sound.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +92,7 @@
 				AD6133CF29020C6600B14679 /* pistol_sound.mp3 */,
 				AD6133D129020C6A00B14679 /* uzi_sound.mp3 */,
 				AD6133D32902103F00B14679 /* slash.mp3 */,
-				AD6133D929021B9400B14679 /* jump_sound.mp3 */,
+				AD6133DC2908992100B14679 /* jump_sound.mp3 */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -160,7 +160,7 @@
 				AD6133D42902103F00B14679 /* slash.mp3 in Resources */,
 				AD6133BF28FC535B00B14679 /* Main.storyboard in Resources */,
 				AD6133CB2900B15E00B14679 /* gun_pick_up.mp3 in Resources */,
-				AD6133DA29021B9400B14679 /* jump_sound.mp3 in Resources */,
+				AD6133DD2908992100B14679 /* jump_sound.mp3 in Resources */,
 				AD6133D229020C6A00B14679 /* uzi_sound.mp3 in Resources */,
 				AD6133B628FC535B00B14679 /* GameScene.sks in Resources */,
 				AD6133C128FC535C00B14679 /* Assets.xcassets in Resources */,

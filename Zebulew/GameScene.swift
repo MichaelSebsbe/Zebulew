@@ -28,27 +28,27 @@ class GameScene: SKScene {
     var flash : SKSpriteNode?
     var wall: SKSpriteNode?
     var bullet: SKSpriteNode?
+    var gunPoint: SKSpriteNode?
+    let gunLocation = CGPoint(x: 237.068, y: -198.964) // guns position in players node
     
     //weapons
     var uzi: SKSpriteNode?
     
     var joystickAction = false
     var aButtonisTapped = false
-//    var aButtonisActive: Bool {
-//        return !aButtonisTapped
-//    }
+
     var hasAgun: Bool = false
     var startBulletAnimation = false
+    var jumping = false
     
     //to detect multiple touches
     var selectedNodes:[UITouch:SKSpriteNode] = [:]
-    
-    //for registering the angle of the bullet
-    var bulletAngle = 0.0
+
     
     //how far the knob can go
     var knobRadius: CGFloat = 50.0
     let playerScale = 0.331
+    var bulletFireAngle = 0.0
     
     var knobIsReturning = false
     
@@ -93,10 +93,14 @@ class GameScene: SKScene {
         playerShadow = player?.childNode(withName: "shadow") as? SKSpriteNode
         playerShadow?.alpha = 0.7
         
+        playerShadow?.zPosition = 0.0
+        player?.zPosition = 0.1
+        
         //misc
         wall = childNode(withName: "wall") as? SKSpriteNode
         flash = childNode(withName: "flash") as? SKSpriteNode //to be used to flash screen when gun fired
         flash?.alpha = 0
+        gunPoint = player!.childNode(withName: "gunPoint") as? SKSpriteNode
         
         //weapons
         uzi = childNode(withName: "uzi") as? SKSpriteNode
@@ -136,7 +140,6 @@ extension GameScene{
             if let aButton = aButton{
                 if aButton.frame.contains(location) {
                     aButtonisTapped = true
-                    //hasAgun ? fireGun() : fireMelee()
                 }
             }
             
@@ -149,6 +152,7 @@ extension GameScene{
             if let bButton = bButton {
                 if bButton.frame.contains(location){
                     run(jumpSound)
+                    jumping = true
                 }
             }
         }
@@ -184,7 +188,6 @@ extension GameScene{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("ended")
         for touch in touches {
             if selectedNodes[touch] == joystickKnob{
                 selectedNodes[touch] = nil
@@ -206,6 +209,7 @@ extension GameScene{
     
     private func startPlayerMovement(_ deltaTime: TimeInterval){
         guard let joystickKnob = joystickKnob,
+              joystickAction,
                 !knobIsReturning else {return}
         
         //get position fo joystick
@@ -219,13 +223,6 @@ extension GameScene{
         let move = SKAction.move(by: displacment, duration: 0)
         let faceMovement = SKAction.rotate(toAngle: angle, duration: 0.0)
         
-        // if gun is shot register angle
-        if aButtonisTapped {
-            //set bullet angle to player face
-            bulletAngle = angle
-            //bulletAngle = Double(player!.zRotation)
-        }
-        
         let movementAndFaceAction = SKAction.sequence([move, faceMovement])
         
         player?.run(movementAndFaceAction)
@@ -236,9 +233,13 @@ extension GameScene{
               let player = player else { return }
         
         run(pistolFireSound)
-        
-        bullet.position = player.position
-        bullet.run(SKAction.rotate(toAngle: bulletAngle , duration: 0))
+        //calculkate offset for bullet location
+        let playersRotationAngle = player.zRotation
+        bulletFireAngle = playersRotationAngle
+      
+        bullet.position = player.convert(gunLocation, to: self)
+        bullet.run(SKAction.rotate(toAngle: bulletFireAngle, duration: 0))
+       
         startBulletAnimation = true
         
     }
@@ -250,8 +251,8 @@ extension GameScene{
     private func animateBullet(bulletSpeed: Double){
         guard let bullet = bullet else {return}
         
-        let rise = sin(bulletAngle) * bulletSpeed
-        let run = cos(bulletAngle) * bulletSpeed
+        let rise = sin(bulletFireAngle) * bulletSpeed
+        let run = cos(bulletFireAngle) * bulletSpeed
         
         let displacment = CGVector(dx: run , dy: rise )
         
@@ -260,6 +261,34 @@ extension GameScene{
         let movementSequence = SKAction.sequence([move])
         
         bullet.run(movementSequence)
+    }
+    
+    private func animateJump(){
+        //skactions for player
+        
+        let scaleUpAction = SKAction.scale(by: 1.3125, duration: 0.5)
+        
+        //let scaleUpAction = SKAction.scale(to: CGSize(width: 105, height: 105), duration: 0.5)
+        scaleUpAction.timingMode = .easeOut
+        
+        let scaleDownAction = SKAction.scale(by: 0.762, duration: 0.5)
+        //let scaleDownAction = SKAction.scale(to: CGSize(width: 80, height: 80 ), duration: 0.5)
+        scaleDownAction.timingMode = .easeIn
+        
+        let jumpAction = SKAction.sequence([scaleUpAction, scaleDownAction])
+        
+        //skAction for shadow
+        
+        let shadowScaleUpAction = SKAction.scale(to: CGSize(width: 490, height: 490), duration: 0.5)
+        shadowScaleUpAction.timingMode = .easeOut
+        
+        let shadowScaleDownAction = SKAction.scale(to: CGSize(width: 420, height: 420 ), duration: 0.5)
+        shadowScaleDownAction.timingMode = .easeIn
+        
+        let shadowAction = SKAction.sequence([shadowScaleDownAction, shadowScaleUpAction])
+        
+        playerShadow?.run(shadowAction)
+        player?.run(jumpAction)
     }
     
 }
@@ -280,10 +309,8 @@ extension GameScene{
         startPlayerMovement(deltaTime)
         
         if aButtonisTapped{
-            //bullet starts flying in same direction as joystick
-            print("fire")
             aButtonisTapped = false
-            
+
             //screen flashes if has a gun
             if hasAgun {
                 //start counting frames
@@ -315,12 +342,20 @@ extension GameScene{
             animateBullet(bulletSpeed: 5)
         }
         
-
+        if jumping{
+            animateJump()
+            jumping = false
+        }
+        
         if let uzi = uzi{
             if CGRectIntersectsRect(player!.frame, uzi.frame){
                 run(gunPickUpSound)
               
                 player!.texture = playerPistolTexture
+                
+                //scale down layer with pistol image to be approx. the same size as player without pistol
+                player!.scale(to: CGSize(width: 65, height: 49.725))
+                
                 hasAgun = true
                 
                 self.uzi = nil
